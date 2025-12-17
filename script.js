@@ -25,14 +25,17 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function loadPDF(mobile) {
         const pdfViewer = document.querySelector('.pdf-viewer');
-        const iframe = document.getElementById('pdfFrame');
+        const container = document.getElementById('pdfCanvasContainer');
         
         if (mobile) {
-            const pdfUrl = window.location.origin + '/' + PDF_FILE;
-            iframe.src = `https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
+            container.innerHTML = `<iframe src="${PDF_FILE}" style="width:100%;height:100%;border:none;"></iframe>`;
         } else {
-            iframe.src = PDF_FILE;
+            container.innerHTML = `<iframe src="${PDF_FILE}" style="width:100%;height:100%;border:none;"></iframe>`;
         }
+        
+        setTimeout(() => {
+            document.getElementById('loadingText').classList.add('hidden');
+        }, 1000);
     }
 
     let isFullscreen = false;
@@ -42,10 +45,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (isFullscreen) {
             pdfContainer.classList.add('fullscreen');
+            document.querySelector('.pdf-viewer').classList.add('fullscreen');
             iconMaximize.classList.add('hidden');
             iconMinimize.classList.remove('hidden');
         } else {
             pdfContainer.classList.remove('fullscreen');
+            document.querySelector('.pdf-viewer').classList.remove('fullscreen');
             iconMaximize.classList.remove('hidden');
             iconMinimize.classList.add('hidden');
         }
