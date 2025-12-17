@@ -1,23 +1,8 @@
 const PDF_FILE = 'PdM_LFec.pdf';
 const EXTERNAL_URL = 'https://lafilec.github.io/LAFILec/';
 const LOGO_PATH = 'lafil.png';
-if (typeof pdfjsLib !== 'undefined') {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-}
-
-let pdfDoc = null;
-let pageNum = 1;
-let pageRendering = false;
-let pageNumPending = null;
-let scale = 1.5;
-let canvas, ctx;
 
 document.addEventListener('DOMContentLoaded', () => {
-    canvas = document.getElementById('pdfCanvas');
-    ctx = canvas.getContext('2d');
-    const btnPrevPage = document.getElementById('btnPrevPage');
-    const btnNextPage = document.getElementById('btnNextPage');
-    const pageInfo = document.getElementById('pageInfo');
     const btnFullscreen = document.getElementById('btnFullscreen');
     const iconMaximize = document.getElementById('iconMaximize');
     const iconMinimize = document.getElementById('iconMinimize');
@@ -25,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoLink = document.getElementById('logoLink');
     const navButton = document.getElementById('navButton');
     const logoImg = document.getElementById('logoImg');
-    const loadingDiv = document.getElementById('loading');
     
     navButton.href = EXTERNAL_URL;
     logoImg.src = LOGO_PATH;
@@ -34,38 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         location.reload();
     });
+
+    loadPDFWithIframe();
     
-    function adjustScale() {
-        const pdfViewer = document.querySelector('.pdf-viewer');
-        const viewerWidth = pdfViewer.clientWidth - 40; 
-        if (window.innerWidth < 768) {
-            scale = Math.min(viewerWidth / 595, 1.5); 
-        } else {
-            scale = Math.min(viewerWidth / 595, 2);
-        }
-
-        if (scale < 0.8) scale = 0.8;
-        if (scale > 2.5) scale = 2.5;
-    }
-    adjustScale();
-
-    if (typeof pdfjsLib !== 'undefined') {
-        loadingDiv.textContent = 'Cargando PDF...';
-        
-        pdfjsLib.getDocument(PDF_FILE).promise.then(pdf => {
-            pdfDoc = pdf;
-            pageInfo.textContent = `Página ${pageNum} de ${pdf.numPages}`;
-            renderPage(pageNum);
-        }).catch(err => {
-            console.error('Error al cargar PDF con PDF.js:', err);
-            loadingDiv.textContent = 'Cargando documento...';
-            fallbackToIframe();
-        });
-    } else {
-        fallbackToIframe();
-    }
-
-    function fallbackToIframe() {
+    function loadPDFWithIframe() {
         const pdfViewer = document.querySelector('.pdf-viewer');
         pdfViewer.innerHTML = '<iframe id="pdfFrame" title="PDF Viewer"></iframe>';
         const iframe = document.getElementById('pdfFrame');
@@ -77,64 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function renderPage(num) {
-        if (!pdfDoc) return;
-        
-        pageRendering = true;
-        pdfDoc.getPage(num).then(page => {
-            const viewport = page.getViewport({ scale: scale });
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            
-            const renderContext = {
-                canvasContext: ctx,
-                viewport: viewport
-            };
-            
-            const renderTask = page.render(renderContext);
-            
-            renderTask.promise.then(() => {
-                pageRendering = false;
-                canvas.style.display = 'block';
-                
-                if (pageNumPending !== null) {
-                    renderPage(pageNumPending);
-                    pageNumPending = null;
-                }
-            }).catch(err => {
-                console.error('Error al renderizar página:', err);
-                pageRendering = false;
-            });
-        }).catch(err => {
-            console.error('Error al obtener página:', err);
-            pageRendering = false;
-        });
-        
-        pageInfo.textContent = `Página ${num} de ${pdfDoc.numPages}`;
-        btnPrevPage.disabled = (num <= 1);
-        btnNextPage.disabled = (num >= pdfDoc.numPages);
-    }
-    
-    function queueRenderPage(num) {
-        if (pageRendering) {
-            pageNumPending = num;
-        } else {
-            renderPage(num);
-        }
-    }
-    
-    btnPrevPage.addEventListener('click', () => {
-        if (pageNum <= 1) return;
-        pageNum--;
-        queueRenderPage(pageNum);
-    });
-    
-    btnNextPage.addEventListener('click', () => {
-        if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
-        pageNum++;
-        queueRenderPage(pageNum);
-    });
-    
     let isFullscreen = false;
     
     btnFullscreen.addEventListener('click', () => {
@@ -148,14 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
             pdfContainer.classList.remove('fullscreen');
             iconMaximize.classList.remove('hidden');
             iconMinimize.classList.add('hidden');
-        }
-    });
-
-    window.addEventListener('resize', () => {
-        const oldScale = scale;
-        adjustScale();
-        if (oldScale !== scale && pdfDoc) {
-            renderPage(pageNum);
         }
     });
 
@@ -178,6 +68,7 @@ function init3DScene() {
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
+
     const snowflakes = [];
     const snowGeometry = new THREE.SphereGeometry(0.08, 8, 8);
     const snowMaterial = new THREE.MeshStandardMaterial({ 
