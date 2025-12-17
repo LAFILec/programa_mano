@@ -19,40 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
         location.reload();
     });
 
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-
-    loadPDF(isMobile);
+    loadPDFWithIframe();
     
-    function loadPDF(mobile) {
-        const container = document.getElementById('pdfCanvasContainer');
-        const loadingText = document.getElementById('loadingText');
-        
-        if (mobile) {
-            loadingText.style.display = 'none';
-            container.innerHTML = `
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px; padding: 40px;">
-                    <svg style="width: 80px; height: 80px; color: #92400e;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                    </svg>
-                    <p style="color: #92400e; font-size: 1.2rem; font-weight: 600; text-align: center;">Visualización no disponible en móviles</p>
-                    <a href="${PDF_FILE}" download style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(to right, #eab308, #d97706); color: white; padding: 16px 32px; border-radius: 12px; text-decoration: none; font-weight: 600; box-shadow: 0 4px 12px rgba(234, 179, 8, 0.4);">
-                        <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                        </svg>
-                        Descargar PDF
-                    </a>
-                </div>
-            `;
-        } else {
-            const iframe = document.createElement('iframe');
-            iframe.src = PDF_FILE;
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
-            iframe.style.border = 'none';
-            iframe.onload = function() {
-                loadingText.style.display = 'none';
-            };
-            container.appendChild(iframe);
+    function loadPDFWithIframe() {
+        const pdfViewer = document.querySelector('.pdf-viewer');
+        pdfViewer.innerHTML = '<iframe id="pdfFrame" title="PDF Viewer"></iframe>';
+        const iframe = document.getElementById('pdfFrame');
+        iframe.src = PDF_FILE;
+
+        const paginationControls = document.querySelector('.controls:first-child');
+        if (paginationControls) {
+            paginationControls.style.display = 'none';
         }
     }
 
@@ -63,24 +40,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (isFullscreen) {
             pdfContainer.classList.add('fullscreen');
-            document.querySelector('.pdf-viewer').classList.add('fullscreen');
             iconMaximize.classList.add('hidden');
             iconMinimize.classList.remove('hidden');
         } else {
             pdfContainer.classList.remove('fullscreen');
-            document.querySelector('.pdf-viewer').classList.remove('fullscreen');
             iconMaximize.classList.remove('hidden');
             iconMinimize.classList.add('hidden');
-        }
-    });
-
-    let wasMobile = isMobile;
-    window.addEventListener('resize', () => {
-        const nowMobile = window.innerWidth < 768;
-        if (wasMobile !== nowMobile) {
-            wasMobile = nowMobile;
-            document.getElementById('pdfCanvasContainer').innerHTML = '';
-            loadPDF(nowMobile);
         }
     });
 
