@@ -19,17 +19,19 @@ document.addEventListener('DOMContentLoaded', () => {
         location.reload();
     });
 
-    loadPDFWithIframe();
-    
-    function loadPDFWithIframe() {
-        const pdfViewer = document.querySelector('.pdf-viewer');
-        pdfViewer.innerHTML = '<iframe id="pdfFrame" title="PDF Viewer"></iframe>';
-        const iframe = document.getElementById('pdfFrame');
-        iframe.src = PDF_FILE;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
-        const paginationControls = document.querySelector('.controls:first-child');
-        if (paginationControls) {
-            paginationControls.style.display = 'none';
+    loadPDF(isMobile);
+    
+    function loadPDF(mobile) {
+        const pdfViewer = document.querySelector('.pdf-viewer');
+        const iframe = document.getElementById('pdfFrame');
+        
+        if (mobile) {
+            const pdfUrl = window.location.origin + '/' + PDF_FILE;
+            iframe.src = `https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
+        } else {
+            iframe.src = PDF_FILE;
         }
     }
 
@@ -46,6 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
             pdfContainer.classList.remove('fullscreen');
             iconMaximize.classList.remove('hidden');
             iconMinimize.classList.add('hidden');
+        }
+    });
+
+    let wasMobile = isMobile;
+    window.addEventListener('resize', () => {
+        const nowMobile = window.innerWidth < 768;
+        if (wasMobile !== nowMobile) {
+            wasMobile = nowMobile;
+            loadPDF(nowMobile);
         }
     });
 
