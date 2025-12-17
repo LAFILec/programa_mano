@@ -32,19 +32,45 @@
         <div class="pdf-container">
             <div class="pdf-wrapper">
                 <div class="pdf-header">
-                    <button class="btn-fullscreen" id="btnFullscreen">
-                        <svg class="icon" id="iconMaximize" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-                        </svg>
-                        <svg class="icon hidden" id="iconMinimize" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
-                        </svg>
-                        <span class="btn-text">Pantalla completa</span>
-                    </button>
+                    <div class="controls">
+                        <button class="btn-control" id="btnPrevPage">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                            <span class="btn-text">Anterior</span>
+                        </button>
+                        <span class="page-info" id="pageInfo">Página 1 de 1</span>
+                        <button class="btn-control" id="btnNextPage">
+                            <span class="btn-text">Siguiente</span>
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-fullscreen" id="btnFullscreen">
+                            <svg class="icon" id="iconMaximize" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                            </svg>
+                            <svg class="icon hidden" id="iconMinimize" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+                            </svg>
+                            <span class="btn-text">Pantalla completa</span>
+                        </button>
+                        <a href="PdM_LFec.pdf" download class="btn-download">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span class="btn-text">Descargar</span>
+                        </a>
+                    </div>
                 </div>
                 
                 <div class="pdf-viewer">
-                    <iframe id="pdfFrame" title="PDF Viewer"></iframe>
+                    <canvas id="pdfCanvas"></canvas>
+                    <div class="loading" id="loading">Cargando PDF...</div>
                 </div>
             </div>
         </div>
@@ -55,6 +81,7 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
