@@ -24,18 +24,30 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPDF(isMobile);
     
     function loadPDF(mobile) {
-        const pdfViewer = document.querySelector('.pdf-viewer');
         const container = document.getElementById('pdfCanvasContainer');
+        const loadingText = document.getElementById('loadingText');
         
         if (mobile) {
-            container.innerHTML = `<iframe src="${PDF_FILE}" style="width:100%;height:100%;border:none;"></iframe>`;
+            const iframe = document.createElement('iframe');
+            iframe.src = PDF_FILE;
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.onload = function() {
+                loadingText.classList.add('hidden');
+            };
+            container.appendChild(iframe);
         } else {
-            container.innerHTML = `<iframe src="${PDF_FILE}" style="width:100%;height:100%;border:none;"></iframe>`;
+            const iframe = document.createElement('iframe');
+            iframe.src = PDF_FILE;
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.onload = function() {
+                loadingText.classList.add('hidden');
+            };
+            container.appendChild(iframe);
         }
-        
-        setTimeout(() => {
-            document.getElementById('loadingText').classList.add('hidden');
-        }, 1000);
     }
 
     let isFullscreen = false;
@@ -61,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const nowMobile = window.innerWidth < 768;
         if (wasMobile !== nowMobile) {
             wasMobile = nowMobile;
+            document.getElementById('pdfCanvasContainer').innerHTML = '';
             loadPDF(nowMobile);
         }
     });
