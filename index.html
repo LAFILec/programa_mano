@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programa De Mano</title>
+    <link rel="icon" type="image/png" href="LF.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="canvas3d"></canvas>
+    
+    <nav class="navbar">
+        <a href="#" class="logo-link" id="logoLink">
+            <img src="LF.png" alt="Logo" class="logo" id="logoImg">
+        </a>
+        <a href="https://lafilec.github.io/LAFILec/" target="_blank" class="nav-button" id="navButton">
+            <span>Ir al Sitio</span>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+        </a>
+    </nav>
+    
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Programa De Mano</h1>
+        </header>
+
+        <div class="pdf-container">
+            <div class="pdf-wrapper">
+                <div class="pdf-header">
+                    <button class="btn-fullscreen" id="btnFullscreen">
+                        <svg class="icon" id="iconMaximize" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                        </svg>
+                        <svg class="icon hidden" id="iconMinimize" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+                        </svg>
+                        <span class="btn-text">Pantalla completa</span>
+                    </button>
+                </div>
+                
+                <div class="pdf-viewer">
+                    <iframe id="pdfFrame" title="PDF Viewer"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <p>© 2025 La Fil. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
